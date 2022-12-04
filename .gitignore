@@ -3,3 +3,4 @@
 waymo-od/
 waymo_open_dataset/
 
+*.tfrecord
