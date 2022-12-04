@@ -1,0 +1,6 @@
+.idea/
+.virtual_documents/
+waymo-od/
+waymo_open_dataset/
+data/
+.ipynb_checkpoints/
