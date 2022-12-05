@@ -17,7 +17,6 @@ def extract_frames(filename, num_frames):
     :param num_frames: Number of frames to be extracted
     :return: Extracted frames in a list
     """
-
     frames_list = list()
     # open dataset
     dataset = tf.data.TFRecordDataset(filename, compression_type='')
@@ -34,10 +33,13 @@ def extract_frames(filename, num_frames):
 
     return frames_list
 
+
 def saveFramesAsPickle(frames, pklName):
     f = open((join(os.curdir, pklName)), 'rb+')
     pickle.dump(frames, f)
     f.close()
+
+
 def main():
     random.seed = 1234
     file_ending = 'tfrecord'
@@ -62,11 +64,6 @@ def main():
 
         time.sleep(1)
     pass
-
-
-
-
-
 
 
 if __name__ == '__main__':
