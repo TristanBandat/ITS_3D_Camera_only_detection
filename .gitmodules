@@ -1,3 +1,0 @@
-[submodule "simple-waymo-open-dataset-reader"]
-	path = simple-waymo-open-dataset-reader
-	url = git@github.com:gdlg/simple-waymo-open-dataset-reader.git
