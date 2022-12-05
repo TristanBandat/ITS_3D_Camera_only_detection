@@ -1,10 +1,12 @@
 import os
 import time
 import random
-from simple_waymo_open_dataset_reader import WaymoDataFileReader
+import pickle
+from os.path import isfile, join
+from waymo_open_dataset import dataset_pb2 as open_dataset
+import tensorflow as tf
 
-
-NUM_FRAMES_PER_RECORD = 3
+NUM_FRAMES_PER_RECORD = 10
 
 
 def extract_frames(filename, num_frames):
@@ -15,25 +17,27 @@ def extract_frames(filename, num_frames):
     :param num_frames: Number of frames to be extracted
     :return: Extracted frames in a list
     """
+
     frames_list = list()
-    # open the file
-    datafile = WaymoDataFileReader(filename)
-    # generate a table of the offset of all frame records in the file
-    table = datafile.get_record_table()
-    # get the random frame id's
-    num_frames_table = len(table)
-    rand_numbers = random.sample(range(0, num_frames_table), num_frames)
-    for i in rand_numbers:
-        # find frame id in file
-        datafile.seek(table[i])
-        # get the frame
-        frame = datafile.read_record()
-        # save frame in the list
+    # open dataset
+    dataset = tf.data.TFRecordDataset(filename, compression_type='')
+    # iterate over shuffled dataset
+    for i,data in enumerate(dataset.shuffle(200)):
+        # parse data
+        frame = open_dataset.Frame()
+        frame.ParseFromString(bytearray(data.numpy()))
+        # append frame to list
         frames_list.append(frame)
+        # check if enough frames are extracted
+        if i == num_frames:
+            break
 
     return frames_list
 
-
+def saveFramesAsPickle(frames, pklName):
+    f = open((join(os.curdir, pklName)), 'wb')
+    pickle.dump(frames, f)
+    f.close()
 def main():
     random.seed = 1234
     file_ending = 'tfrecord'
@@ -50,14 +54,19 @@ def main():
                     print(f'Found file: {filename}')
                     # Extract the frames from the file
                     frames = extract_frames(filename, NUM_FRAMES_PER_RECORD)
-                    # TODO: save the frames somewhere
-
-                    # TODO: uncomment statement when working
-                    # os.remove(filename)
+                    # Save the frames as a pickle
+                    saveFramesAsPickle(frames, 'data.pkl')
+                    # Delete the file
+                    os.remove(filename)
                     print('done.')
 
         time.sleep(1)
     pass
+
+
+
+
+
 
 
 if __name__ == '__main__':
