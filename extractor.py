@@ -35,7 +35,11 @@ def extract_frames(filename, num_frames):
 
 
 def saveFramesAsPickle(frames, pklName):
-    f = open((join(os.curdir, pklName)), 'rb+')
+    # check if there is an existing pickle file
+    try:
+        f = open((join(os.curdir, pklName)), 'rb+')
+    except FileNotFoundError:
+        f = open((join(os.curdir, pklName)), 'wb')
     pickle.dump(frames, f)
     f.close()
 
@@ -43,6 +47,7 @@ def saveFramesAsPickle(frames, pklName):
 def main():
     random.seed = 1234
     file_ending = 'tfrecord'
+    wrong_file_ending = 'gstmp'
     while True:
         print('Checking for files...\t\tType CTRL+C to escape')
         # list all files in cwd
@@ -51,6 +56,9 @@ def main():
         if len(all_files) != 0:
             # go through all files
             for filename in all_files:
+                # check if the file is still downloading
+                if filename.find(wrong_file_ending) != -1:
+                    continue
                 # check for correct file ending
                 if filename.find(file_ending) != -1:
                     print(f'Found file: {filename}')
