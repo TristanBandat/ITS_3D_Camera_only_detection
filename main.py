@@ -1,6 +1,5 @@
 import os
 from os.path import join
-
 import numpy as np
 import torch
 import torch.utils.data
@@ -13,7 +12,7 @@ from utils import collate_fn
 # TODO: We need targets for the images!!!
 def main():
     # TODO: Maybe change this to 3 separate files, but this is easier for now
-    image_dataset = ImageDataset(frame_path=join(os.getcwd(), 'data.pkl'))
+    image_dataset = ImageDataset(frame_path=join(os.getcwd(), 'data/data.pkl'))
     train_set = torch.utils.data.Subset(image_dataset, indices=np.arange(int(len(image_dataset) * (3 / 5))))
     valid_set = torch.utils.data.Subset(image_dataset, indices=np.arange(int(len(image_dataset) * (3 / 5)),
                                                                          int(len(image_dataset) * (4 / 5))))
@@ -28,12 +27,18 @@ def main():
                                               shuffle=True, num_workers=1)
 
     # Demo Code
-    for data in train_loader:
+    for data_batch in train_loader:
+        image_data, boxes = data_batch[0], data_batch[1]
         # Demo Code
-        plt.imshow(data[0, :, :, :])
+        plt.imshow(image_data[0, :, :])
         plt.grid(False)
         plt.axis('off')
         plt.show()
+        plt.imshow(boxes[0, :, :])
+        plt.grid(False)
+        plt.axis('off')
+        plt.show()
+        # print(boxes[0])
 
 
 if __name__ == '__main__':
