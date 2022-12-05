@@ -22,7 +22,7 @@ def extract_frames(filename, num_frames):
     # open dataset
     dataset = tf.data.TFRecordDataset(filename, compression_type='')
     # iterate over shuffled dataset
-    for i,data in enumerate(dataset.shuffle(200)):
+    for i, data in enumerate(dataset.shuffle(200)):
         # parse data
         frame = open_dataset.Frame()
         frame.ParseFromString(bytearray(data.numpy()))
@@ -35,7 +35,7 @@ def extract_frames(filename, num_frames):
     return frames_list
 
 def saveFramesAsPickle(frames, pklName):
-    f = open((join(os.curdir, pklName)), 'wb')
+    f = open((join(os.curdir, pklName)), 'rb+')
     pickle.dump(frames, f)
     f.close()
 def main():
