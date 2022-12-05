@@ -28,7 +28,7 @@ def extract_frames(filename, num_frames):
         # append frame to list
         frames_list.append(frame)
         # check if enough frames are extracted
-        if i == num_frames:
+        if i == num_frames-1:
             break
 
     return frames_list
