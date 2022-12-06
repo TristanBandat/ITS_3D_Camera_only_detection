@@ -4,6 +4,7 @@ waymo-od/
 waymo_open_dataset/
 data/
 data2/
+final_data/
 .ipynb_checkpoints/
 __pycache__/
 *.tfrecord
