@@ -9,7 +9,6 @@ from ImageDataset import ImageDataset
 from utils import collate_fn
 
 
-# TODO: We need targets for the images!!!
 def main():
     # TODO: Maybe change this to 3 separate files, but this is easier for now
     image_dataset = ImageDataset(frame_path=join(os.getcwd(), 'data/data.pkl'))
@@ -18,7 +17,6 @@ def main():
                                                                          int(len(image_dataset) * (4 / 5))))
     test_set = torch.utils.data.Subset(image_dataset, indices=np.arange(int(len(image_dataset) * (4 / 5)),
                                                                         int(len(image_dataset))))
-    # TODO: collate_fn for stacking
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=2, collate_fn=collate_fn,
                                                shuffle=True, num_workers=1)
     val_loader = torch.utils.data.DataLoader(valid_set, batch_size=1, collate_fn=collate_fn,
