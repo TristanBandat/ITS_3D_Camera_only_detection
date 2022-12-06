@@ -17,30 +17,37 @@ def extract_frames(filename, num_frames):
     :param num_frames: Number of frames to be extracted
     :return: Extracted frames in a list
     """
-
     frames_list = list()
     # open dataset
     dataset = tf.data.TFRecordDataset(filename, compression_type='')
     # iterate over shuffled dataset
-    for i,data in enumerate(dataset.shuffle(200)):
+    for i, data in enumerate(dataset.shuffle(200)):
         # parse data
         frame = open_dataset.Frame()
         frame.ParseFromString(bytearray(data.numpy()))
         # append frame to list
         frames_list.append(frame)
         # check if enough frames are extracted
-        if i == num_frames:
+        if i == num_frames-1:
             break
 
     return frames_list
 
+
 def saveFramesAsPickle(frames, pklName):
-    f = open((join(os.curdir, pklName)), 'wb')
+    # check if there is an existing pickle file
+    try:
+        f = open((join(os.curdir, pklName)), 'rb+')
+    except FileNotFoundError:
+        f = open((join(os.curdir, pklName)), 'wb')
     pickle.dump(frames, f)
     f.close()
+
+
 def main():
     random.seed = 1234
     file_ending = 'tfrecord'
+    wrong_file_ending = 'gstmp'
     while True:
         print('Checking for files...\t\tType CTRL+C to escape')
         # list all files in cwd
@@ -49,6 +56,9 @@ def main():
         if len(all_files) != 0:
             # go through all files
             for filename in all_files:
+                # check if the file is still downloading
+                if filename.find(wrong_file_ending) != -1:
+                    continue
                 # check for correct file ending
                 if filename.find(file_ending) != -1:
                     print(f'Found file: {filename}')
@@ -62,11 +72,6 @@ def main():
 
         time.sleep(1)
     pass
-
-
-
-
-
 
 
 if __name__ == '__main__':
