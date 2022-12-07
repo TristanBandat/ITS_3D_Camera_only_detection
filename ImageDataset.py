@@ -9,9 +9,9 @@ class ImageDataset(Dataset):
         self.image_files = list()
         # load frames from pickle
         with open(frame_path, "rb") as f:
-            self.pkl = pickle.load(f)
+            pkl = pickle.load(f)
         # iterate over frames
-        for f in self.pkl:
+        for f in pkl:
             # get front image data
             tf_image = tf.image.decode_jpeg(f.images[0].image)
             # convert to numpy array
