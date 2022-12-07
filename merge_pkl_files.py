@@ -4,7 +4,7 @@ from os.path import join
 
 
 def main():
-    file_ending = 'pkl'
+    file_ending = '.pkl'
     final_data_name = 'waymo-data.pkl'
     data_list = list()
     print('Checking for files...')
@@ -23,7 +23,7 @@ def main():
                 data_list.extend(data)
         if len(data_list) != 0:
             with open((join(os.curdir, final_data_name)), 'wb') as f:
-                pickle.dump(data, f)
+                pickle.dump(data_list, f)
     print('done.')
     pass
 
