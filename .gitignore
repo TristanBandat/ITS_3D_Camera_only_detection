@@ -9,3 +9,4 @@ final_data/
 __pycache__/
 *.tfrecord
 dist/
+results/

@@ -35,12 +35,15 @@ def collate_fn(batch_as_list: list):
     # Allocate a tensor that can fit all padded sequences
     max_Y = np.max([seq['image'].shape[1] for seq in batch_as_list])
     stacked_sequences = torch.zeros(size=(len(batch_as_list), max_X, max_Y,
-                                          batch_as_list[0]['image'].shape[2]), dtype=torch.int32)
-    stacked_labels = torch.zeros(size=(len(batch_as_list), max_X, max_Y), dtype=torch.int32)
+                                          batch_as_list[0]['image'].shape[2]), dtype=torch.float32)
+    stacked_labels = torch.zeros(size=(len(batch_as_list), max_X, max_Y), dtype=torch.float32)
     # Write the sequences into the tensor stacked_sequences
     for i, sequence in enumerate(batch_as_list):
         stacked_sequences[i] = torch.from_numpy(sequence['image'])
         label_image = calculate_label_image(sequence, (max_X, max_Y))
         stacked_labels[i] = torch.from_numpy(label_image)
 
+    # add dimensions to target to match image_array [1, 1280,1920] -> [1, 3, 1280, 1920]
+    stacked_labels = stacked_labels.unsqueeze(1)
+    stacked_labels = stacked_labels.repeat(1, 3, 1, 1)
     return stacked_sequences, stacked_labels

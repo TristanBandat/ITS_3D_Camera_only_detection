@@ -36,11 +36,16 @@ def extract_frames(filename, num_frames):
 
 def saveFramesAsPickle(frames, pklName):
     # check if there is an existing pickle file
+    pkl = frames
     try:
-        f = open((join(os.curdir, pklName)), 'rb+')
+        # load frames from pickle
+        with open((join(os.curdir, pklName)), "rb") as f:
+            pkl = pickle.load(f)
+        pkl.extend(frames)
+        f = open((join(os.curdir, pklName)), 'wb')
     except FileNotFoundError:
         f = open((join(os.curdir, pklName)), 'wb')
-    pickle.dump(frames, f)
+    pickle.dump(pkl, f)
     f.close()
 
 
@@ -70,7 +75,7 @@ def main():
                     os.remove(filename)
                     print('done.')
 
-        time.sleep(1)
+        time.sleep(10)
     pass
 
 
