@@ -1,12 +1,12 @@
 .idea/
 .virtual_documents/
 waymo-od/
-waymo_open_dataset/
+waymo_open_dataset/__pycache__/
 data/
 data2/
 final_data/
 .ipynb_checkpoints/
 __pycache__/
 *.tfrecord
-
-
+dist/
+results/
