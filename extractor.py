@@ -2,11 +2,12 @@ import os
 import time
 import random
 import pickle
-from os.path import isfile, join
+from os.path import join
 from waymo_open_dataset import dataset_pb2 as open_dataset
 import tensorflow as tf
+from compress_data import compress_frame_list
 
-NUM_FRAMES_PER_RECORD = 10
+NUM_FRAMES_PER_RECORD = 20
 
 
 def extract_frames(filename, num_frames):
@@ -69,10 +70,12 @@ def main():
                     print(f'Found file: {filename}')
                     # Extract the frames from the file
                     frames = extract_frames(filename, NUM_FRAMES_PER_RECORD)
+                    # compress the frames
+                    comp_data = compress_frame_list(frames, 6)
                     # Save the frames as a pickle
-                    saveFramesAsPickle(frames, 'data.pkl')
+                    saveFramesAsPickle(comp_data, 'data_part9_10.pkl')
                     # Delete the file
-                    os.remove(filename)
+                    # os.remove(filename)
                     print('done.')
 
         time.sleep(10)
