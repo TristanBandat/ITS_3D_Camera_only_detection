@@ -36,7 +36,7 @@ def evaluate_model(model: torch.nn.Module, dataloader: torch.utils.data.DataLoad
 
 def main(results_path="results", device: torch.device = torch.device("cuda:0"), n_updates: int = int(5)):
     # TODO: Maybe change this to 3 separate files, but this is easier for now
-    image_dataset = ImageDataset(frame_path=join(os.getcwd(), 'data.pkl'))
+    image_dataset = ImageDataset(frame_path=join(os.getcwd(), 'final_data/data_part1_4.pkl'))
     train_set = torch.utils.data.Subset(image_dataset, indices=np.arange(int(len(image_dataset) * (3 / 5))))
     valid_set = torch.utils.data.Subset(image_dataset, indices=np.arange(int(len(image_dataset) * (3 / 5)),
                                                                          int(len(image_dataset) * (4 / 5))))
