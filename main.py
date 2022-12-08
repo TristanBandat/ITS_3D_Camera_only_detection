@@ -61,7 +61,7 @@ def main(results_path="results", device: torch.device = torch.device("cuda:0"), 
     no_update_counter = 0  # counter for how many updates have passed without a new best validation loss
 
     # Create CNN Network
-    net = CNN(n_hidden_layers=5, n_input_channels=3, n_hidden_kernels=64, kernel_size=3)
+    net = CNN(n_hidden_layers=5, n_input_channels=3, n_hidden_kernels=64, kernel_size=3, activation_fn=torch.nn.ReLU)
     net.to(device)
 
     # get l1 loss

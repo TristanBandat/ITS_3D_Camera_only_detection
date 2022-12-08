@@ -3,7 +3,7 @@ from torch import nn
 
 
 class CNN(nn.Module):
-    def __init__(self, n_input_channels: int, n_hidden_layers: int, n_hidden_kernels: int, kernel_size: int):
+    def __init__(self, n_input_channels: int, n_hidden_layers: int, n_hidden_kernels: int, kernel_size: int, activation_fn: torch.autograd.Function):
         """CNN, consisting of "n_hidden_layers" linear layers, using relu
         activation function in the hidden CNN layers.
 
@@ -25,7 +25,7 @@ class CNN(nn.Module):
             layer = nn.Conv2d(in_channels=n_input_channels, out_channels=n_hidden_kernels, kernel_size=kernel_size,bias=True, padding=int(kernel_size/2))
             hidden_layers.append(layer)
             # Add relu activation module to list of modules
-            hidden_layers.append(nn.ReLU())
+            hidden_layers.append(activation_fn)
             hidden_layers.append(nn.Dropout(0.2))
             n_input_channels = n_hidden_kernels
 
