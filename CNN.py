@@ -3,7 +3,7 @@ from torch import nn
 
 
 class CNN(nn.Module):
-    def __init__(self, n_input_channels: int, n_hidden_layers: int, n_hidden_kernels: int, kernel_size: int, activation_fn: torch.autograd.Function):
+    def __init__(self, n_input_channels: int, n_hidden_layers: int, n_hidden_kernels: int, kernel_size: int):
         """CNN, consisting of "n_hidden_layers" linear layers, using relu
         activation function in the hidden CNN layers.
 
@@ -22,16 +22,18 @@ class CNN(nn.Module):
 
         hidden_layers = []
         for i in range(n_hidden_layers):
-            layer = nn.Conv2d(in_channels=n_input_channels, out_channels=n_hidden_kernels, kernel_size=kernel_size,bias=True, padding=int(kernel_size/2))
+            layer = nn.Conv2d(in_channels=n_input_channels, out_channels=n_hidden_kernels, kernel_size=kernel_size,
+                              bias=True, padding=int(kernel_size / 2))
             hidden_layers.append(layer)
             # Add relu activation module to list of modules
-            hidden_layers.append(activation_fn)
+            hidden_layers.append(torch.nn.ReLU)
             hidden_layers.append(nn.Dropout(0.2))
             n_input_channels = n_hidden_kernels
 
         self.hidden_layers = nn.Sequential(*hidden_layers)
-        #Todo: change output layer, isn't correct yet
-        self.output_layer = nn.Conv2d(in_channels=n_input_channels, out_channels=3, kernel_size=kernel_size,bias=True, padding=int(kernel_size/2))
+        # Todo: change output layer, isn't correct yet
+        self.output_layer = nn.Conv2d(in_channels=n_input_channels, out_channels=1, kernel_size=kernel_size, bias=True,
+                                      padding=int(kernel_size / 2))
 
     def forward(self, x: torch.Tensor):
         """Apply CNN to "x"
@@ -46,9 +48,12 @@ class CNN(nn.Module):
         torch.Tensor
             Output tensor of shape (n_samples, n_output_channels, u, v)
         """
+
         # Apply hidden layers module
+        # maps (N, n_in_channels, X, Y) -> (N, n_kernels, X, Y)
         hidden_features = self.hidden_layers(x)
 
         # Apply last layer (=output layer)
+        # maps (N, n_kernels, X, Y) -> (N, 3, X, Y)
         output = self.output_layer(hidden_features)
         return output
