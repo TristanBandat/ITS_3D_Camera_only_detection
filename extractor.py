@@ -29,25 +29,40 @@ def extract_frames(filename, num_frames):
         # append frame to list
         frames_list.append(frame)
         # check if enough frames are extracted
-        if i == num_frames-1:
+        if i == num_frames - 1:
             break
 
     return frames_list
 
 
-def saveFramesAsPickle(frames, pklName):
+def saveFramesAsPickle(frames : list, pklName):
     # check if there is an existing pickle file
-    pkl = frames
-    try:
-        # load frames from pickle
-        with open((join(os.curdir, pklName)), "rb") as f:
-            pkl = pickle.load(f)
-        pkl.extend(frames)
-        f = open((join(os.curdir, pklName)), 'wb')
-    except FileNotFoundError:
-        f = open((join(os.curdir, pklName)), 'wb')
-    pickle.dump(pkl, f)
-    f.close()
+    data = []
+    path = join(os.curdir, pklName)
+
+    if os.path.exists(path):
+        with open(path, "rb") as f:
+            data = pickle.load(f)
+    else:
+        with open(path, "wb") as f:
+            print('Pickle file created, since not existing yet')
+
+    data.extend(frames)
+
+    with open(path, "wb") as f:
+        pickle.dump(data, f)
+
+
+    #try:
+    #    # load frames from pickle
+    #    with open(path, "rb") as f:
+    #        pkl = pickle.load(f)
+    #    pkl.extend(frames)
+    #    f = open(path, 'wb')
+    #except FileNotFoundError:
+    #    f = open(path, 'wb')
+    #pickle.dump(pkl, f)
+    #f.close()
 
 
 def main():
@@ -71,7 +86,7 @@ def main():
                     # Extract the frames from the file
                     frames = extract_frames(filename, NUM_FRAMES_PER_RECORD)
                     # compress the frames
-                    comp_data = compress_frame_list(frames, 6)
+                    comp_data = compress_frame_list(frames, compression_factor=6)
                     # Save the frames as a pickle
                     saveFramesAsPickle(comp_data, 'data_part9_10.pkl')
                     # Delete the file
