@@ -44,16 +44,16 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
     update_progessbar = tqdm.tqdm(total=nupdates, desc=f"loss: {np.nan:7.5f}", position=0)  # progressbar
     while update < nupdates and no_update_counter < 3:
         for batch in train_loader:
-            # TODO: In this for loop, change the corresponding functions/parameters based on the model we have
 
             # get data
-            image_array, target_array = batch
+            image_array = batch['image']
+            target_array = batch['boxes']
 
-            # change dimensions of image_array to fit CNN
-            image_array = image_array.permute(0, 3, 1, 2) # TODO: Change depending on input (can only be done, once the program is running)
+            # image_array = image_array.permute(0, 3, 1, 2) # TODO: Probably not needed
 
-            image_array = image_array.to(device)
-            target_array = target_array.to(device)
+            image_array = image_array.to(device, dtype=torch.float32)
+            target_array = target_array.to(device, dtype=torch.float32)
+
             # Reset gradients
             optimizer.zero_grad()
 
@@ -75,7 +75,7 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
 
             # Evaluate model on validation set
             if (update + 1) % validate_at == 0 and update > 0:
-                val_loss = evaluate_model(net, dataloader=valid_loader, device=device)
+                val_loss = evaluate_model(net, dataloader=valid_loader, device=device, loss_fn=loss_fn)
                 writer.add_scalar(tag="validation/loss", scalar_value=val_loss, global_step=update)
                 # Add weights as arrays to tensorboard
                 for i, param in enumerate(net.parameters()):
@@ -107,9 +107,9 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
     # Load best model and compute score on test set
     print(f"Computing scores for best model")
     net = torch.load(os.path.join(resultpath, 'best_model.pt'))
-    test_loss = evaluate_model(net, dataloader=test_loader, device=device)
-    val_loss = evaluate_model(net, dataloader=valid_loader, device=device)
-    train_loss = evaluate_model(net, dataloader=train_loader, device=device)
+    test_loss = evaluate_model(net, dataloader=test_loader, device=device, loss_fn=loss_fn)
+    val_loss = evaluate_model(net, dataloader=valid_loader, device=device, loss_fn=loss_fn)
+    train_loss = evaluate_model(net, dataloader=train_loader, device=device, loss_fn=loss_fn)
 
     print(f"Scores:")
     print(f"test loss: {test_loss}")

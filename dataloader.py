@@ -9,9 +9,9 @@ def get_dataloaders(dataset, valid_ratio, test_ratio, batchsize, num_workers, co
     train_ratio = 1 - test_ratio - valid_ratio
 
     train_start_index = 0
-    train_end_index = int(len(dataset)*train_ratio)
+    train_end_index = int(len(dataset) * train_ratio)
     valid_start_index = train_end_index
-    valid_end_index = int(len(dataset)*(1-test_ratio))
+    valid_end_index = int(len(dataset) * (1 - test_ratio))
     test_start_index = valid_end_index
     test_end_index = len(dataset)
 
