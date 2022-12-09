@@ -35,7 +35,7 @@ def main():
 
     loss_fn = torch.nn.L1Loss()
 
-    nupdates = 500
+    nupdates = 50000
 
     testset_ratio = 1 / 5
 
