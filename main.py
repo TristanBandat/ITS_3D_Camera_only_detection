@@ -24,13 +24,13 @@ def main():
     optimizer = torch.optim.Adam(net.parameters(), lr=lr, weight_decay=weight_decay)
     batch_size = 16
     loss_fn = torch.nn.L1Loss()
-    num_updates = 50000
+    num_updates = 50
     testset_ratio = 1 / 5
     validset_ratio = 1 / 5
-    num_workers = 0
+    num_workers = 2
     seed = 1234
     result_path = 'results/cnn'
-    data_path = os.path.join(os.getcwd(), 'data/waymo-data_part1_comp.pkl')
+    data_path = os.path.join(os.getcwd(), 'final_data/waymo-data.pkl')
 
     ############
     # Invoke training method with specified parameters
