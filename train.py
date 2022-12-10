@@ -10,18 +10,18 @@ from torch.utils.tensorboard import SummaryWriter
 import tqdm
 
 
-def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, validset_ratio, num_workers, seed,
-          datapath='data.pkl', resultpath='results', collate_fn=None):
+def train(net, device, optim, batch_size, loss_fn, num_updates, testset_ratio, validset_ratio, num_workers, seed_,
+          data_path='data.pkl', result_path='results', collate_fn=None):
     # Setting seed
-    np.random.seed(seed=seed)
-    torch.manual_seed(seed=seed)
+    np.random.seed(seed=seed_)
+    torch.manual_seed(seed=seed_)
 
-    image_dataset = ImageDataset(frame_path=datapath)
+    image_dataset = ImageDataset(frame_path=data_path)
 
-    train_loader, valid_loader, test_loader = get_dataloaders(image_dataset, testset_ratio, validset_ratio, batchsize,
+    train_loader, valid_loader, test_loader = get_dataloaders(image_dataset, testset_ratio, validset_ratio, batch_size,
                                                               num_workers, collate_fn)
 
-    writer = SummaryWriter(log_dir=os.path.join(resultpath, 'tensorboard'))
+    writer = SummaryWriter(log_dir=os.path.join(result_path, 'tensorboard'))
 
     print_stats_at = 100  # print status to tensorboard every x updates
     validate_at = 5000  # evaluate model on validation set and check for new best model every x updates
@@ -39,10 +39,10 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
     optimizer = optim
 
     # Save initial model as "best" model (will be overwritten later)
-    torch.save(net, os.path.join(resultpath, 'best_model.pt'))
+    torch.save(net, os.path.join(result_path, 'best_model.pt'))
 
-    update_progessbar = tqdm.tqdm(total=nupdates, desc=f"loss: {np.nan:7.5f}", position=0)  # progressbar
-    while update < nupdates and no_update_counter < 3:
+    update_progressbar = tqdm.tqdm(total=num_updates, desc=f"loss: {np.nan:7.5f}", position=0)  # progressbar
+    while update < num_updates and no_update_counter < 3:
         for batch in train_loader:
 
             # get data
@@ -70,8 +70,8 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
             optimizer.step()
 
             # Update progress bar
-            update_progessbar.set_description(f"loss: {loss.item():7.5f}")
-            update_progessbar.update(1)
+            update_progressbar.set_description(f"loss: {loss.item():7.5f}")
+            update_progressbar.update(1)
 
             # Evaluate model on validation set
             if (update + 1) % validate_at == 0 and update > 0:
@@ -90,7 +90,7 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
                 if best_validation_loss > val_loss:
                     no_update_counter = 0
                     best_validation_loss = val_loss
-                    torch.save(net, os.path.join(resultpath, 'best_model.pt'))
+                    torch.save(net, os.path.join(result_path, 'best_model.pt'))
 
             # Print current status and score
             if (update + 1) % print_stats_at == 0 and update > 0:
@@ -98,15 +98,15 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
                                   scalar_value=loss.cpu(),
                                   global_step=update)
             update += 1
-            if update >= nupdates or no_update_counter >= 3:
+            if update >= num_updates or no_update_counter >= 3:
                 break
 
-    update_progessbar.close()
+    update_progressbar.close()
     print('Finished Training!')
 
     # Load best model and compute score on test set
     print(f"Computing scores for best model")
-    net = torch.load(os.path.join(resultpath, 'best_model.pt'))
+    net = torch.load(os.path.join(result_path, 'best_model.pt'))
     test_loss = evaluate_model(net, dataloader=test_loader, device=device, loss_fn=loss_fn)
     val_loss = evaluate_model(net, dataloader=valid_loader, device=device, loss_fn=loss_fn)
     train_loss = evaluate_model(net, dataloader=train_loader, device=device, loss_fn=loss_fn)

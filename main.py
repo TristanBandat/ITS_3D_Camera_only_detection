@@ -40,15 +40,15 @@ def main():
         net=net,
         device=device,
         optim=optimizer,
-        batchsize=batch_size,
+        batch_size=batch_size,
         loss_fn=loss_fn,
-        nupdates=num_updates,
+        num_updates=num_updates,
         testset_ratio=testset_ratio,
         validset_ratio=validset_ratio,
         num_workers=num_workers,
         seed=seed,
-        datapath=data_path,
-        resultpath=result_path,
+        data_path=data_path,
+        result_path=result_path,
     )
 
 
