@@ -1,7 +1,6 @@
 from CNN import CNN
 from UNet import UNet
 from train import train
-from utils import collate_fn
 
 import torch
 import torch.utils.data
@@ -32,7 +31,6 @@ def main():
     seed = 1234
     result_path = 'results/cnn'
     data_path = os.path.join(os.getcwd(), 'data/waymo-data_part1_comp.pkl')
-    collate_function = collate_fn  # TODO: Maybe not needed
 
     ############
     # Invoke training method with specified parameters
@@ -51,7 +49,6 @@ def main():
         seed=seed,
         datapath=data_path,
         resultpath=result_path,
-        collate_fn=None  # TODO: Change if needed otherwise delete parameter from method and delete method from utils
     )
 
 

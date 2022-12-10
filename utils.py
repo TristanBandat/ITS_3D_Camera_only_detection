@@ -24,9 +24,11 @@ def calculate_label_image(sequence, xy):
 
 
 def collate_fn(batch_as_list: list):
-    #
-    # Handle sequences
-    #
+    """
+    NOT IN USE ANYMORE
+    :param batch_as_list:
+    :return:
+    """
     # Get the maximum sequence length in the current minibatch
     max_X = np.max([seq['image'].shape[0] for seq in batch_as_list])
     # Allocate a tensor that can fit all padded sequences
