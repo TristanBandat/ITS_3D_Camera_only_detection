@@ -32,8 +32,8 @@ def calculate_label_image(boxes, xy):
 
 
 def compress(dataset: ImageDataset, compression_factor=4):
-    comp_X = int(dataset.get_X()/compression_factor)
-    comp_Y = int(dataset.get_Y()/compression_factor)
+    comp_X = int(dataset.get_X() / compression_factor)
+    comp_Y = int(dataset.get_Y() / compression_factor)
     comp_data = list()
     update_progress_bar = tqdm.tqdm(total=len(dataset.image_files), desc="Images: ", position=0)
     for element in dataset.image_files:
@@ -48,8 +48,8 @@ def compress(dataset: ImageDataset, compression_factor=4):
 def compress_frame_list(frames: list, compression_factor=4):
     full_X = 1280
     full_Y = 1920
-    comp_X = full_X/compression_factor
-    comp_Y = full_Y/compression_factor
+    comp_X = full_X / compression_factor
+    comp_Y = full_Y / compression_factor
     comp_data = list()
     update_progress_bar = tqdm.tqdm(total=len(frames), desc="Frames: ", position=0)
     for frame in frames:
@@ -67,10 +67,9 @@ def compress_frame_list(frames: list, compression_factor=4):
 def main():
     filename = 'final_data/waymo-data_part2_comp.pkl'
     dataset = ImageDataset(frame_path=join(os.getcwd(), 'data/data_part5_8.pkl'))
-    compressed_data = compress(dataset, 6)
+    compressed_data = compress(dataset, compression_factor=6)
     with open((join(os.curdir, filename)), 'wb') as f:
         pickle.dump(compressed_data, f)
-    pass
 
 
 if __name__ == '__main__':

@@ -29,13 +29,13 @@ def extract_frames(filename, num_frames):
         # append frame to list
         frames_list.append(frame)
         # check if enough frames are extracted
-        if i == num_frames-1:
+        if i == num_frames - 1:
             break
 
     return frames_list
 
 
-def saveFramesAsPickle(frames, pklName):
+def saveFramesAsPickle(frames : list, pklName):
     # check if there is an existing pickle file
     pkl = frames
     try:
@@ -49,6 +49,7 @@ def saveFramesAsPickle(frames, pklName):
         f = open((join(os.curdir, pklName)), 'wb')
     pickle.dump(pkl, f)
     f.close()
+
 
 
 def main():
