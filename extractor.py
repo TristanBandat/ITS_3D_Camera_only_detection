@@ -35,8 +35,13 @@ def extract_frames(filename, num_frames):
     return frames_list
 
 
-def saveFramesAsPickle(frames : list, pklName):
-    # check if there is an existing pickle file
+def saveFramesAsPickle(frames: list, pklName):
+    """
+    check if there is an existing pickle file
+    :param frames: list of frames extracted from a tfercord file
+    :param pklName: Pickle file to store the data in
+    :return: none
+    """
     pkl = frames
     try:
         # load frames from pickle
@@ -49,7 +54,6 @@ def saveFramesAsPickle(frames : list, pklName):
         f = open((join(os.curdir, pklName)), 'wb')
     pickle.dump(pkl, f)
     f.close()
-
 
 
 def main():
