@@ -2,9 +2,10 @@ import os
 import time
 import random
 import pickle
-from os.path import isfile, join
+from os.path import join
 from waymo_open_dataset import dataset_pb2 as open_dataset
 import tensorflow as tf
+from compress_data import compress_frame_list
 
 NUM_FRAMES_PER_RECORD = 10
 
@@ -28,20 +29,26 @@ def extract_frames(filename, num_frames):
         # append frame to list
         frames_list.append(frame)
         # check if enough frames are extracted
-        if i == num_frames-1:
+        if i == num_frames - 1:
             break
 
     return frames_list
 
 
-def saveFramesAsPickle(frames, pklName):
-    # check if there is an existing pickle file
+def saveFramesAsPickle(frames: list, pklName):
+    """
+    check if there is an existing pickle file
+    :param frames: list of frames extracted from a tfercord file
+    :param pklName: Pickle file to store the data in
+    :return: none
+    """
     pkl = frames
     try:
         # load frames from pickle
         with open((join(os.curdir, pklName)), "rb") as f:
             pkl = pickle.load(f)
         pkl.extend(frames)
+        os.remove(pklName)
         f = open((join(os.curdir, pklName)), 'wb')
     except FileNotFoundError:
         f = open((join(os.curdir, pklName)), 'wb')
@@ -59,6 +66,7 @@ def main():
         all_files = os.listdir()
         # check for nonempty directory
         if len(all_files) != 0:
+            comp_data = list()
             # go through all files
             for filename in all_files:
                 # check if the file is still downloading
@@ -69,11 +77,13 @@ def main():
                     print(f'Found file: {filename}')
                     # Extract the frames from the file
                     frames = extract_frames(filename, NUM_FRAMES_PER_RECORD)
-                    # Save the frames as a pickle
-                    saveFramesAsPickle(frames, 'data.pkl')
+                    # compress the frames
+                    comp_data.extend(compress_frame_list(frames, 6))
                     # Delete the file
                     os.remove(filename)
                     print('done.')
+            # Save the frames as a pickle
+            saveFramesAsPickle(comp_data, 'data_part11_12.pkl')
 
         time.sleep(10)
     pass

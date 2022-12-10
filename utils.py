@@ -1,8 +1,5 @@
 import numpy as np
 import torch
-import math
-import os
-from matplotlib import pyplot as plt
 
 
 def calculate_label_image(sequence, xy):
