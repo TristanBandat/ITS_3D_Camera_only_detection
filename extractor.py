@@ -7,7 +7,7 @@ from waymo_open_dataset import dataset_pb2 as open_dataset
 import tensorflow as tf
 from compress_data import compress_frame_list
 
-NUM_FRAMES_PER_RECORD = 20
+NUM_FRAMES_PER_RECORD = 10
 
 
 def extract_frames(filename, num_frames):
@@ -43,6 +43,7 @@ def saveFramesAsPickle(frames, pklName):
         with open((join(os.curdir, pklName)), "rb") as f:
             pkl = pickle.load(f)
         pkl.extend(frames)
+        os.remove(pklName)
         f = open((join(os.curdir, pklName)), 'wb')
     except FileNotFoundError:
         f = open((join(os.curdir, pklName)), 'wb')
@@ -60,6 +61,7 @@ def main():
         all_files = os.listdir()
         # check for nonempty directory
         if len(all_files) != 0:
+            comp_data = list()
             # go through all files
             for filename in all_files:
                 # check if the file is still downloading
@@ -71,12 +73,12 @@ def main():
                     # Extract the frames from the file
                     frames = extract_frames(filename, NUM_FRAMES_PER_RECORD)
                     # compress the frames
-                    comp_data = compress_frame_list(frames, 6)
-                    # Save the frames as a pickle
-                    saveFramesAsPickle(comp_data, 'data_part9_10.pkl')
+                    comp_data.extend(compress_frame_list(frames, 6))
                     # Delete the file
-                    # os.remove(filename)
+                    os.remove(filename)
                     print('done.')
+            # Save the frames as a pickle
+            saveFramesAsPickle(comp_data, 'data_part11_12.pkl')
 
         time.sleep(10)
     pass
