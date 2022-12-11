@@ -10,16 +10,16 @@ def evaluate_model(model: torch.nn.Module, dataloader: torch.utils.data.DataLoad
             image_array = batch['image']
             target_array = batch['boxes']
 
-            # change dimensions of image_array to fit CNN
-            #image_array = image_array.permute(0, 3, 1, 2)
-
             # move to device
             image_array = image_array.to(device, dtype=torch.float32)
             target_array = target_array.to(device, dtype=torch.float32)
+
             # get output
             output = model(image_array)
-            loss += loss_fn(output, target_array)
+            mask_pred = (torch.nn.functional.sigmoid(output) > 0.5).float()
 
-    model.train()
+            loss += loss_fn(mask_pred, target_array)
+
+    model.train() # setting model back to training mode
     loss /= len(dataloader)
     return loss

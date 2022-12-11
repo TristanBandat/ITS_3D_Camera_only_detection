@@ -1,6 +1,7 @@
 from dataloader import get_dataloaders
 from ImageDataset import ImageDataset
 from evaluate import evaluate_model
+from plot import plot
 
 import os
 import numpy as np
@@ -11,7 +12,8 @@ import tqdm
 
 
 def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, validset_ratio, num_workers, seed,
-          datapath='data.pkl', resultpath='results', collate_fn=None):
+          plot_images_at,
+          print_stats_at, validate_at, datapath='data.pkl', resultpath='results', collate_fn=None):
     # Setting seed
     np.random.seed(seed=seed)
     torch.manual_seed(seed=seed)
@@ -23,8 +25,6 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
 
     writer = SummaryWriter(log_dir=os.path.join(resultpath, 'tensorboard'))
 
-    print_stats_at = 100  # print status to tensorboard every x updates
-    validate_at = 5000  # evaluate model on validation set and check for new best model every x updates
     update = 0  # current update counter
     best_validation_loss = np.inf  # best validation loss so far
     no_update_counter = 0  # counter for how many updates have passed without a new best validation loss
@@ -41,6 +41,7 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
     # Save initial model as "best" model (will be overwritten later)
     torch.save(net, os.path.join(resultpath, 'best_model.pt'))
 
+    print("Starting training")
     update_progessbar = tqdm.tqdm(total=nupdates, desc=f"loss: {np.nan:7.5f}", position=0)  # progressbar
     while update < nupdates and no_update_counter < 3:
         for batch in train_loader:
@@ -48,8 +49,6 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
             # get data
             image_array = batch['image']
             target_array = batch['boxes']
-
-            # image_array = image_array.permute(0, 3, 1, 2) # TODO: Probably not needed
 
             image_array = image_array.to(device, dtype=torch.float32)
             target_array = target_array.to(device, dtype=torch.float32)
@@ -65,6 +64,11 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
 
             # Backward pass
             loss.backward()
+
+            # p_tensor = target_array.cpu()
+
+            # plt.imshow(image_array.detach())
+            # plt.show()
 
             # Update weights
             optimizer.step()
@@ -90,13 +94,21 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
                 if best_validation_loss > val_loss:
                     no_update_counter = 0
                     best_validation_loss = val_loss
+                    print("\nNew best model found, saving...")
                     torch.save(net, os.path.join(resultpath, 'best_model.pt'))
+                    print("Finished saving")
 
             # Print current status and score
-            if (update + 1) % print_stats_at == 0 and update > 0:
+            if (update + 1) % print_stats_at == 0:
                 writer.add_scalar(tag="training/loss",
                                   scalar_value=loss.cpu(),
                                   global_step=update)
+
+            if (update + 1) % plot_images_at == 0:
+                prediction = (torch.nn.functional.sigmoid(output) > 0.5).float()
+                plot(image_array.detach().cpu().numpy()[0, 0], target_array.detach().cpu().numpy()[0, 0],
+                     prediction.detach().cpu().numpy()[0, 0], os.path.join(resultpath, "plots"), update)
+
             update += 1
             if update >= nupdates or no_update_counter >= 3:
                 break
