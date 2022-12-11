@@ -58,6 +58,7 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
 
             # Forward pass
             output = net(image_array)
+            # prediction = (torch.nn.functional.sigmoid(output) > 0.5).float() # TODO: Still a error here if we would use the real values
 
             # Calculate loss
             loss = loss_fn(output, target_array)
