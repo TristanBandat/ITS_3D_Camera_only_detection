@@ -28,7 +28,7 @@
       </ul>
     </li>
     <li><a href="#getting-started">Getting Started</a></li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#Important files and folders">Important Files and Folders</a></li>
     <li><a href="#contact">Contact</a></li>
     <!-- <li><a href="#acknowledgements">Acknowledgements</a></li> -->
   </ol>
@@ -69,14 +69,29 @@ gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
    git clone https://github.com/TristanBandat/ITS_3D_Camera_only_detection.git
    ```
 
-2. Download dataset from ...<br><br>
+2. Install dependencies<br>
 
+   The fastest way to install the necassary dependencies is via conda: <br>
+   `conda install -f environment.yml`<br><br>
 
+3. Download dataset from ...<br><br>
    
 
-<!-- USAGE EXAMPLES -->
-## Usage
+<!-- FILES & FOLDERS -->
+## Important files and folders
 
+### main.py
+The entry point is the main.py file. Here one can find all the different hyperparameters and available models to train.
+Furthermore the path to the dataset and the final models is also chosen here.
+If all the necessary packages are installed one can simply run the file and the training starts.
+
+### train.py
+
+Here one can find the whole project structure. Further details and explanations are contained in the notebook [ITS_3D_Camera_only_challenge](ITS_3D_Camera_only_challenge.ipynb).
+
+### results
+
+In the results folder the final model and the plots can be found. With the help of tensorboard one can also view additional plots like train/validation loss or the gradients.
 
 
 <!-- CONTACT -->

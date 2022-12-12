@@ -17,10 +17,10 @@ def main():
     ############
 
     cnn_net = CNN(n_hidden_layers=5, n_input_channels=1, n_hidden_kernels=64, kernel_size=3)
-    unet = UNet(n_channels=1, n_classes=2, bilinear=False)  # classes are 1 and 0 (car, no car)
+    unet = UNet(n_channels=1, n_classes=1, bilinear=False)  # classes are 1 and 0 (car, no car) therefore 1 class
 
     # select a model
-    net = cnn_net
+    net = unet
 
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -34,6 +34,7 @@ def main():
     batchsize = 16
 
     loss_fn = torch.nn.L1Loss()
+    loss_fn_new = torch.nn.BCEWithLogitsLoss()
 
     nupdates = 50000
 
@@ -45,11 +46,16 @@ def main():
 
     seed = 1234
 
-    resultpath = 'results/cnn'
+    resultpath = 'results/unet'
 
-    datapath = os.path.join(os.getcwd(), 'data/waymo-data_part1_comp.pkl')
+    datapath = os.path.join(os.getcwd(), 'data/new_data.pkl')
 
     collate_function = collate_fn  # TODO: Maybe not needed
+
+    print_stats_at = 100  # print status to tensorboard every x updates
+    validate_at = 200  # evaluate model on validation set and check for new best model every x updates
+    plot_images_at = 50 # plot model every 100 updates
+
 
     ############
     # Invoke training method with specified parameters
@@ -60,7 +66,7 @@ def main():
         device=device,
         optim=optimizer,
         batchsize=batchsize,
-        loss_fn=loss_fn,
+        loss_fn=loss_fn_new,
         nupdates=nupdates,
         testset_ratio=testset_ratio,
         validset_ratio=validset_ratio,
@@ -68,6 +74,9 @@ def main():
         seed=seed,
         datapath=datapath,
         resultpath=resultpath,
+        print_stats_at=print_stats_at,
+        validate_at = validate_at,
+        plot_images_at = plot_images_at,
         collate_fn=None  # TODO: Change if needed otherwise delete parameter from method and delete method from utils
     )
 
