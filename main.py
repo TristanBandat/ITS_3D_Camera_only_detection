@@ -66,7 +66,7 @@ def main():
         device=device,
         optim=optimizer,
         batchsize=batchsize,
-        loss_fn=loss_fn,
+        loss_fn=loss_fn_new,
         nupdates=nupdates,
         testset_ratio=testset_ratio,
         validset_ratio=validset_ratio,

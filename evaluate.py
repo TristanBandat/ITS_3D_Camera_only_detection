@@ -16,9 +16,8 @@ def evaluate_model(model: torch.nn.Module, dataloader: torch.utils.data.DataLoad
 
             # get output
             output = model(image_array)
-            mask_pred = (torch.nn.functional.sigmoid(output) > 0.5).float()
 
-            loss += loss_fn(mask_pred, target_array)
+            loss += loss_fn(output, target_array)
 
     model.train() # setting model back to training mode
     loss /= len(dataloader)
