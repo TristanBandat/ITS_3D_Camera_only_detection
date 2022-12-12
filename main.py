@@ -1,7 +1,7 @@
 from CNN import CNN
 from UNet import UNet
 from train import train
-from utils import collate_fn
+
 
 import torch
 import torch.utils.data
@@ -25,9 +25,9 @@ def main():
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-    lr = 1e-3
+    lr = 1e-3 # initial 1e-3
 
-    weight_decay = 1e-5
+    weight_decay = 1e-5 # initial 1e-5
 
     optimizer = torch.optim.Adam(net.parameters(), lr=lr, weight_decay=weight_decay)
 
@@ -36,7 +36,7 @@ def main():
     loss_fn = torch.nn.L1Loss()
     loss_fn_new = torch.nn.BCEWithLogitsLoss()
 
-    nupdates = 50000
+    nupdates = 5000
 
     testset_ratio = 1 / 5
 
@@ -44,13 +44,11 @@ def main():
 
     num_workers = 0
 
-    seed = 1234
+    seed = 1234 # initial 1234
 
     resultpath = 'results/unet'
 
     datapath = os.path.join(os.getcwd(), 'data/new_data.pkl')
-
-    collate_function = collate_fn  # TODO: Maybe not needed
 
     print_stats_at = 100  # print status to tensorboard every x updates
     validate_at = 200  # evaluate model on validation set and check for new best model every x updates
@@ -77,7 +75,6 @@ def main():
         print_stats_at=print_stats_at,
         validate_at = validate_at,
         plot_images_at = plot_images_at,
-        collate_fn=None  # TODO: Change if needed otherwise delete parameter from method and delete method from utils
     )
 
 

@@ -31,7 +31,7 @@ class CNN(nn.Module):
             n_input_channels = n_hidden_kernels
 
         self.hidden_layers = nn.Sequential(*hidden_layers)
-        # Todo: change output layer, isn't correct yet
+
         self.output_layer = nn.Conv2d(in_channels=n_input_channels, out_channels=1, kernel_size=1)
 
     def forward(self, x: torch.Tensor):

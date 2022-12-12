@@ -13,7 +13,7 @@ import tqdm
 
 def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, validset_ratio, num_workers, seed,
           plot_images_at,
-          print_stats_at, validate_at, datapath='data.pkl', resultpath='results', collate_fn=None):
+          print_stats_at, validate_at, datapath='data.pkl', resultpath='results'):
     # Setting seed
     np.random.seed(seed=seed)
     torch.manual_seed(seed=seed)
@@ -21,7 +21,7 @@ def train(net, device, optim, batchsize, loss_fn, nupdates, testset_ratio, valid
     image_dataset = ImageDataset(frame_path=datapath)
 
     train_loader, valid_loader, test_loader = get_dataloaders(image_dataset, testset_ratio, validset_ratio, batchsize,
-                                                              num_workers, collate_fn)
+                                                              num_workers)
 
     writer = SummaryWriter(log_dir=os.path.join(resultpath, 'tensorboard'))
 
