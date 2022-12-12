@@ -1,7 +1,6 @@
 import torch
 
 
-# TODO: prototype, improve
 def evaluate_model(model: torch.nn.Module, dataloader: torch.utils.data.DataLoader, device: torch.device, loss_fn):
     model.eval()
     loss = 0
