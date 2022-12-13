@@ -112,7 +112,7 @@ Furthermore the path to the dataset and the final models is also chosen here.<br
 If all the necessary packages are installed one can simply run the file and the training starts.<br>
 
 ### Training
-[train.py](train.py)
+[train.py](train.py)<br>
 Here one can find the whole project structure. Further details and explanations are contained in the
 [notebook](ITS_3D_Camera_only_challenge.ipynb).
 
