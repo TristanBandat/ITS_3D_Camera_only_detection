@@ -72,26 +72,44 @@ gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 2. Install dependencies<br>
 
    The fastest way to install the necassary dependencies is via conda: <br>
-   `conda install -f environment.yml`<br><br>
+   ```shell
+   conda install -f environment.yml
+   ```
 
-3. Download dataset from ...<br><br>
+3. Download dataset from 
+   [here](https://console.cloud.google.com/storage/browser/waymo_open_dataset_v_1_4_0;tab=objects?prefix=&forceOnObjectsSortingFiltering=false)
+   .<br>
+   For downloading the 1GB big tfrecords use the following command:<br>
+   ```shell
+   gcloud storage cp "[FILE]" "[FILE]" ...
+   ```
+
+4. Select and compress data to a pickle file using the [Extractor](extractor.py).<br>
+   ```shell
+   python extractor.py
+   ```
+
+5. Now one can proceed with the [notebook](ITS_3D_Camera_only_challenge.ipynb) or the [main](main.py) file.
    
 
 <!-- FILES & FOLDERS -->
 ## Important files and folders
 
-### main.py
-The entry point is the main.py file. Here one can find all the different hyperparameters and available models to train.
-Furthermore the path to the dataset and the final models is also chosen here.
-If all the necessary packages are installed one can simply run the file and the training starts.
+### Main file
+[main.py](main.py)<br>
+The entry point is the main.py file. Here one can find all the different hyperparameters and available models to train.<br>
+Furthermore the path to the dataset and the final models is also chosen here.<br>
+If all the necessary packages are installed one can simply run the file and the training starts.<br>
 
-### train.py
+### Training
+[train.py](train.py)
+Here one can find the whole project structure. Further details and explanations are contained in the
+[notebook](ITS_3D_Camera_only_challenge.ipynb).
 
-Here one can find the whole project structure. Further details and explanations are contained in the notebook [ITS_3D_Camera_only_challenge](ITS_3D_Camera_only_challenge.ipynb).
+### Results
 
-### results
-
-In the results folder the final model and the plots can be found. With the help of tensorboard one can also view additional plots like train/validation loss or the gradients.
+In the `results/` folder the final model and the plots can be found. With the help of tensorboard one can also <br>
+view additional plots like train/validation loss or the gradients.
 
 
 <!-- CONTACT -->
