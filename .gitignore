@@ -10,3 +10,5 @@ data_new/
 __pycache__/
 *.tfrecord
 dist/
+results/
+

@@ -28,7 +28,13 @@
       </ul>
     </li>
     <li><a href="#getting-started">Getting Started</a></li>
-    <li><a href="#Important files and folders">Important Files and Folders</a></li>
+    <li><a href="#Important files and folders">Important Files and Folders</a>
+      <ul>
+        <li><a href="#Main file">Main file</a></li>
+        <li><a href="#Training">Training</a></li>
+        <li><a href="#Results">Results</a></li>
+      </ul>
+    </li>
     <li><a href="#contact">Contact</a></li>
     <!-- <li><a href="#acknowledgements">Acknowledgements</a></li> -->
   </ol>
@@ -39,28 +45,32 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore 
-magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd 
-gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing 
-elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos 
-et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem 
-ipsum dolor sit amet.
+This project was conducted as part of the course "KV Special Topics in AI - ITS" in WS22. <br>
+The primary goal was to look at the Waymo dataset, more specifically the 3D camera-only detection <br>
+part of the Motion dataset. After downloading and processing the dataset we tried 2 different models.<br>
+We programmed a CNN ourselves as a model and then continued to work with the pre-built UNET. <br><br>
+
+The UNET was developed by Olaf Ronneberger et al. for Bio Medical Image Segmentation. <br>
+The model is an end-to-end fully convolutional network (FCN), i.e. it only contains Convolutional layers and <br>
+does not contain any Dense layer because of which it can accept image of any size.
 
 
 ### Built With
 
 * [PyCharm](https://www.jetbrains.com/pycharm/)
+* [Jupyter](https://www.jupyter.com)
 * [Github Desktop](https://desktop.github.com/)
 * [Vim](https://www.vim.org/)
+* [GCloud](https://cloud.google.com/storage/docs/reference/libraries)
 
 
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore 
-magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd 
-gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+For this project, only the training dataset was used for space reasons, which is after all also approx. 800GB in size.<br>
+The downloaded records are then (or during) selected with the [extractor](extractor.py), compressed, processed <br>
+and saved as tensors in a pickle file.
 
 ### Installation
 
@@ -72,26 +82,44 @@ gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 2. Install dependencies<br>
 
    The fastest way to install the necassary dependencies is via conda: <br>
-   `conda install -f environment.yml`<br><br>
+   ```shell
+   conda install -f environment.yml
+   ```
 
-3. Download dataset from ...<br><br>
+3. Download dataset from 
+   [here](https://console.cloud.google.com/storage/browser/waymo_open_dataset_v_1_4_0;tab=objects?prefix=&forceOnObjectsSortingFiltering=false)
+   .<br>
+   For downloading the 1GB big tfrecords use the following command:<br>
+   ```shell
+   gcloud storage cp "[FILE]" "[FILE]" ...
+   ```
+
+4. Select and compress data to a pickle file using the [Extractor](extractor.py).<br>
+   ```shell
+   python extractor.py
+   ```
+
+5. Now one can proceed with the [notebook](ITS_3D_Camera_only_challenge.ipynb) or the [main](main.py) file.
    
 
 <!-- FILES & FOLDERS -->
 ## Important files and folders
 
-### main.py
-The entry point is the main.py file. Here one can find all the different hyperparameters and available models to train.
-Furthermore the path to the dataset and the final models is also chosen here.
-If all the necessary packages are installed one can simply run the file and the training starts.
+### Main file
+[main.py](main.py)<br>
+The entry point is the main.py file. Here one can find all the different hyperparameters and available models to train.<br>
+Furthermore the path to the dataset and the final models is also chosen here.<br>
+If all the necessary packages are installed one can simply run the file and the training starts.<br>
 
-### train.py
+### Training
+[train.py](train.py)<br>
+Here one can find the whole project structure. Further details and explanations are contained in the
+[notebook](ITS_3D_Camera_only_challenge.ipynb).
 
-Here one can find the whole project structure. Further details and explanations are contained in the notebook [ITS_3D_Camera_only_challenge](ITS_3D_Camera_only_challenge.ipynb).
+### Results
 
-### results
-
-In the results folder the final model and the plots can be found. With the help of tensorboard one can also view additional plots like train/validation loss or the gradients.
+In the `results/` folder the final model and the plots can be found. With the help of tensorboard one can also <br>
+view additional plots like train/validation loss or the gradients.
 
 
 <!-- CONTACT -->
@@ -99,9 +127,8 @@ In the results folder the final model and the plots can be found. With the help 
 
 Tristan Bandat - tristan.bandat@gmail.com <br>
 Philipp Meingaßner - meingassner.p@gmail.com <br>
-Jakob Eggl -  <br>
-Florian Hitzler -  <br>
-
+Jakob Eggl  <br>
+Florian Hitzler  <br>
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
@@ -116,9 +143,5 @@ Florian Hitzler -  <br>
 [issues-url]: https://github.com/TristanBandat/ITS_3D_Camera_only_detection/issues
 [pulls-shield]: https://img.shields.io/github/issues-pr/TristanBandat/ITS_3D_Camera_only_detection.svg?style=for-the-badge
 [pulls-url]: https://github.com/TristanBandat/ITS_3D_Camera_only_detection/pulls
-[license-shield]: https://img.shields.io/github/license/TristanBandat/ITS_3D_Camera_only_detection.svg?style=for-the-badge
-[license-url]: https://github.com/TristanBandat/ITS_3D_Camera_only_detection/blob/master/LICENSE.txt
 [closed_pulls-shield]: https://img.shields.io/github/issues-pr-closed/TristanBandat/ITS_3D_Camera_only_detection?style=for-the-badge
 [closed_pulls-url]: https://github.com/TristanBandat/ITS_3D_Camera_only_detection/pulls?q=is%3Apr+is%3Aclosed
-[closed_issues-shield]: https://img.shields.io/github/issues-closed/TristanBandat/ITS_3D_Camera_only_detection?style=for-the-badge
-[closed_issues-url]: https://github.com/TristanBandat/ITS_3D_Camera_only_detection/issues?q=is%3Aissue+is%3Aclosed
